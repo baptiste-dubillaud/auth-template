@@ -1,0 +1,30 @@
+# Node.js / Next.js
+node_modules/
+.next/
+out/
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+*.venv
+env/
+venv/
+ENV/
+venv.bak/
+*.egg-info/
+dist/
+build/
+*.log
