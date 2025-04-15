@@ -16,8 +16,10 @@ COPY . .
 # Build the application
 #RUN npm run build
 
+ARG FRONTEND_PORT
+
 # Expose the port the app runs on
-EXPOSE 3000
+EXPOSE $FRONTEND_PORT
 
 # Start the application
 CMD ["npm", "run", "dev"]

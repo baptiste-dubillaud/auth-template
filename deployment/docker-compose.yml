@@ -5,21 +5,57 @@ services:
     build:
       context: ../frontend
       dockerfile: Dockerfile.frontend
+      args:
+        FRONTEND_PORT: ${FRONTEND_PORT}
     ports:
-      - "3000:3000"
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     volumes:
       - ../frontend:/app
       - /app/node_modules
     environment:
-      - NODE_ENV=development
+      # Env kind
+      - FRONT_ENV=dev
+
+      # Frontend info
+      - FRONTEND_URL=http://localhost:{FRONTEND_PORT}
+
+      # Activated auth systems
+      - AUTH_EMAIL_PASSWORD=${AUTH_EMAIL_PASSWORD}
+      - AUTH_MICROSOFT=${AUTH_MICROSOFT}
+      - AUTH_GOOGLE=${AUTH_GOOGLE}
+      - AUTH_APPLE=${AUTH_APPLE}
 
   backend:
     build:
       context: ../backend
       dockerfile: Dockerfile.backend
+      args:
+        BACKEND_API_PORT: ${BACKEND_API_PORT}
+        BACKEND_API_HOST: ${BACKEND_API_HOST}
     ports:
-      - "8000:8000"
+      - "${BACKEND_API_PORT}:${BACKEND_API_PORT}"
     volumes:
       - ../backend/src:/app
     environment:
+      # Env kind
+      - API_ENV=dev
+
       - UVICORN_WORKERS=4
+
+      # Backend API info
+      - BACKEND_API_HOST=${BACKEND_API_HOST}
+      - BACKEND_API_PORT=${BACKEND_API_PORT}
+      - BACKEND_API_DEFAULT_ROUTE=${BACKEND_API_DEFAULT_ROUTE}
+
+      # Microsoft Entra ID
+      - ENTRA_ID_CLIENT_ID=${ENTRA_ID_CLIENT_ID}
+      - ENTRA_ID_CLIENT_SECRET=${ENTRA_ID_CLIENT_SECRET}
+      - ENTRA_ID_TENANT_ID=${ENTRA_ID_TENANT_ID}
+      - ENTRA_ID_BASE_URL=${ENTRA_ID_BASE_URL}
+      - ENTRA_ID_USER_SCOPE=${ENTRA_ID_USER_SCOPE}
+      - ENTRA_ID_APPLICATION_SCOPE=${ENTRA_ID_APPLICATION_SCOPE}
+
+      # Google
+
+
+      # Apple
