@@ -1,3 +1,4 @@
 fastapi
 uvicorn
 msal
+python-dotenv

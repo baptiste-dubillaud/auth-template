@@ -6,7 +6,7 @@ import uvicorn
 import msal
 import requests
   
-from routers import auth, data
+from routers import authentication, data
 
 app = FastAPI()
 
@@ -14,7 +14,7 @@ main_router = APIRouter(
     prefix=os.getenv("BACKEND_API_DEFAULT_ROUTE"),
     tags=[os.getenv("BACKEND_API_DEFAULT_ROUTE")]
 )
-main_router.include_router(auth.router)
+main_router.include_router(authentication.router)
 main_router.include_router(data.router)
 
 app.include_router(main_router)

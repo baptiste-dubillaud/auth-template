@@ -19,12 +19,6 @@ services:
       # Frontend info
       - FRONTEND_URL=http://localhost:{FRONTEND_PORT}
 
-      # Activated auth systems
-      - AUTH_EMAIL_PASSWORD=${AUTH_EMAIL_PASSWORD}
-      - AUTH_MICROSOFT=${AUTH_MICROSOFT}
-      - AUTH_GOOGLE=${AUTH_GOOGLE}
-      - AUTH_APPLE=${AUTH_APPLE}
-
   backend:
     build:
       context: ../backend
@@ -37,10 +31,18 @@ services:
     volumes:
       - ../backend/src:/app
     environment:
-      # Env kind
+      ##### Env kind
       - API_ENV=dev
 
       - UVICORN_WORKERS=4
+
+      ##### Auth systems
+      # Activated auth systems
+      - AUTH_EMAIL_PASSWORD=${AUTH_EMAIL_PASSWORD}
+      - AUTH_MICROSOFT=${AUTH_MICROSOFT}
+      - AUTH_GOOGLE=${AUTH_GOOGLE}
+      - AUTH_APPLE=${AUTH_APPLE}
+      - AUTH_FACEBOOK=${AUTH_FACEBOOK}
 
       # Backend API info
       - BACKEND_API_HOST=${BACKEND_API_HOST}
@@ -51,11 +53,20 @@ services:
       - ENTRA_ID_CLIENT_ID=${ENTRA_ID_CLIENT_ID}
       - ENTRA_ID_CLIENT_SECRET=${ENTRA_ID_CLIENT_SECRET}
       - ENTRA_ID_TENANT_ID=${ENTRA_ID_TENANT_ID}
-      - ENTRA_ID_BASE_URL=${ENTRA_ID_BASE_URL}
-      - ENTRA_ID_USER_SCOPE=${ENTRA_ID_USER_SCOPE}
-      - ENTRA_ID_APPLICATION_SCOPE=${ENTRA_ID_APPLICATION_SCOPE}
 
       # Google
 
 
       # Apple
+
+
+      # Facebook
+
+
+      ##### Database
+      # Database info
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}

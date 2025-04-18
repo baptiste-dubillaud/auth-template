@@ -1,26 +1,25 @@
-import os
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 import msal
 import requests
 
+import internal.config.config as config
+
 router = APIRouter(
-    prefix="/auth",
-    tags=["auth"]
+    prefix="/entra_id",
+    tags=["Entra ID"]
 )
 
-CLIENT_ID = os.getenv("ENTRA_ID_CLIENT_ID")
-CLIENT_SECRET = os.getenv("ENTRA_ID_CLIENT_SECRET")
-AUTHORITY = os.getenv("ENTRA_ID_BASE_URL") + os.getenv("ENTRA_ID_TENANT_ID")
+CLIENT_ID = config.ENTRA_ID_CLIENT_ID
+CLIENT_SECRET = config.ENTRA_ID_CLIENT_SECRET
+AUTHORITY = config.ENTRA_ID_BASE_URL + "common"  # This is the common endpoint for all tenants
 
 # User scope (delegated)
-USER_SCOPE = os.getenv("ENTRA_ID_USER_SCOPE").split(",")
+USER_SCOPE = config.ENTRA_ID_USER_SCOPE.split(",")
 # Application scope
-APPLICATION_SCOPE = os.getenv("ENTRA_ID_APPLICATION_SCOPE").split(",")
+APPLICATION_SCOPE = config.ENTRA_ID_APPLICATION_SCOPE.split(",")
 
-REDIRECT_URI = os.getenv("BACKEND_API_HOST") + ":" + os.getenv("BACKEND_API_PORT") + os.getenv("BACKEND_API_DEFAULT_ROUTE") + "/auth/callback"
-
+REDIRECT_URI = config.BACKEND_API_HOST + ":" + config.BACKEND_API_PORT + config.BACKEND_API_DEFAULT_ROUTE + "/auth/callback"
 # MSAL Client
 msal_client = msal.ConfidentialClientApplication(
     CLIENT_ID,
@@ -50,6 +49,14 @@ async def callback(code: str):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Failed to obtain token")
 
 #####
+
+@router.get("/app-token")
+async def get_app_token():
+    result = msal_client.acquire_token_for_client(scopes=APPLICATION_SCOPE)
+    if "access_token" in result:
+        return {"access_token": result["access_token"]}
+    else:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Failed to obtain application token")
 
 def get_access_token():
     result = msal_client.acquire_token_for_client(scopes=APPLICATION_SCOPE)
