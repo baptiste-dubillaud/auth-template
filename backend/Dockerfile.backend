@@ -21,5 +21,7 @@ ARG BACKEND_API_PORT
 EXPOSE $BACKEND_API_PORT
 
 # Start the application
+CMD ["python", "main.py"]
 #CMD ["uvicorn", "main:app", "--host", $BACKEND_API_HOST, "--port", "8000"]
-CMD uvicorn main:app --host $BACKEND_API_HOST --port $BACKEND_API_PORT --reload
+#CMD uvicorn main:app --host $BACKEND_API_HOST --port $BACKEND_API_PORT --reload
+#CMD ["sh", "-c", "uvicorn main:app --host ${BACKEND_API_HOST:-0.0.0.0} --port ${BACKEND_API_PORT:-8000} --reload"]

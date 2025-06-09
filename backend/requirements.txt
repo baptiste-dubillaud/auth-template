@@ -2,3 +2,14 @@ fastapi
 uvicorn
 msal
 python-dotenv
+asyncpg
+sqlalchemy
+alembic
+passlib[bcrypt]
+python-jose[cryptography]
+python-multipart
+httpx
+pydantic[email]
+authlib
+itsdangerous
+psycopg2-binary

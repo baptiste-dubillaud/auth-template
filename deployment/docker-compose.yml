@@ -14,10 +14,13 @@ services:
       - /app/node_modules
     environment:
       # Env kind
-      - FRONT_ENV=dev
+      - FRONT_ENV=${FRONT_ENV}
 
       # Frontend info
-      - FRONTEND_URL=http://localhost:{FRONTEND_PORT}
+      - FRONTEND_URL=http://${FRONTEND_URL}:${FRONTEND_PORT}
+
+      # API url
+      - BACKEND_URL=http://${BACKEND_API_HOST}:${BACKEND_API_PORT}${BACKEND_API_DEFAULT_ROUTE}
 
   backend:
     build:
@@ -32,17 +35,17 @@ services:
       - ../backend/src:/app
     environment:
       ##### Env kind
-      - API_ENV=dev
+      - API_ENV=${API_ENV}
 
-      - UVICORN_WORKERS=4
+      - UVICORN_WORKERS=1
 
       ##### Auth systems
       # Activated auth systems
       - AUTH_EMAIL_PASSWORD=${AUTH_EMAIL_PASSWORD}
       - AUTH_MICROSOFT=${AUTH_MICROSOFT}
       - AUTH_GOOGLE=${AUTH_GOOGLE}
-      - AUTH_APPLE=${AUTH_APPLE}
       - AUTH_FACEBOOK=${AUTH_FACEBOOK}
+      - AUTH_STRAVA=${AUTH_STRAVA}
 
       # Backend API info
       - BACKEND_API_HOST=${BACKEND_API_HOST}
@@ -58,9 +61,6 @@ services:
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
 
-      # Apple
-
-
       # Facebook
       - FACEBOOK_CLIENT_ID=${FACEBOOK_CLIENT_ID}
       - FACEBOOK_CLIENT_SECRET=${FACEBOOK_CLIENT_SECRET}
@@ -71,7 +71,6 @@ services:
 
       # JWT Configuration
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
-
 
       ##### Database
       # Database info
