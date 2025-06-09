@@ -9,17 +9,17 @@ from internal.auth.security import create_access_token, ACCESS_TOKEN_EXPIRE_MINU
 from internal.auth.oauth import get_oauth_provider, normalize_user_data
 
 router = APIRouter(
-    prefix="/google",
-    tags=["Google OAuth"]
+    prefix="/strava",
+    tags=["Strava OAuth"]
 )
 
 @router.get("/login", response_model=OAuthURL)
-async def google_login():
-    """Initiate Google OAuth login."""
-    provider = get_oauth_provider("google")
+async def strava_login():
+    """Initiate Strava OAuth login."""
+    provider = get_oauth_provider("strava")
     state = secrets.token_urlsafe(32)
     
-    auth_url = await provider.get_authorization_url("google", state)
+    auth_url = await provider.get_authorization_url("strava", state)
     
     return {
         "auth_url": auth_url,
@@ -27,13 +27,13 @@ async def google_login():
     }
 
 @router.get("/callback", response_model=Token)
-async def google_callback(code: str, state: str = None, db: Session = Depends(get_db)):
-    """Handle Google OAuth callback."""
-    provider = get_oauth_provider("google")
+async def strava_callback(code: str, state: str = None, db: Session = Depends(get_db)):
+    """Handle Strava OAuth callback."""
+    provider = get_oauth_provider("strava")
     
     try:
         # Exchange code for token
-        token_data = await provider.exchange_code_for_token("google", code)
+        token_data = await provider.exchange_code_for_token("strava", code)
         access_token = token_data.get("access_token")
         
         if not access_token:
@@ -42,13 +42,13 @@ async def google_callback(code: str, state: str = None, db: Session = Depends(ge
                 detail="Failed to obtain access token"
             )
         
-        # Get user info from Google
+        # Get user info from Strava
         user_info = await provider.get_user_info(access_token)
-        normalized_data = normalize_user_data("google", user_info)
+        normalized_data = normalize_user_data("strava", user_info)
         
         # Check if OAuth account exists
         oauth_account = db.query(OAuthAccount).filter(
-            OAuthAccount.provider == "google",
+            OAuthAccount.provider == "strava",
             OAuthAccount.provider_user_id == normalized_data["provider_user_id"]
         ).first()
         
@@ -61,15 +61,19 @@ async def google_callback(code: str, state: str = None, db: Session = Depends(ge
             
             user = oauth_account.user
         else:
+            # For Strava, we need to handle the case where email might not be provided
+            # We'll create a unique email based on the Strava user ID if no email is available
+            user_email = normalized_data.get("email")
+            if not user_email:
+                user_email = f"strava_{normalized_data['provider_user_id']}@strava.local"
+            
             # Check if user exists by email
-            user = None
-            if normalized_data.get("email"):
-                user = db.query(User).filter(User.email == normalized_data["email"]).first()
+            user = db.query(User).filter(User.email == user_email).first()
             
             if not user:
                 # Create new user
                 user = User(
-                    email=normalized_data.get("email"),
+                    email=user_email,
                     full_name=normalized_data.get("full_name"),
                     avatar_url=normalized_data.get("avatar_url"),
                     is_verified=True  # OAuth users are considered verified
@@ -81,7 +85,7 @@ async def google_callback(code: str, state: str = None, db: Session = Depends(ge
             # Create OAuth account
             oauth_account = OAuthAccount(
                 user_id=user.id,
-                provider="google",
+                provider="strava",
                 provider_user_id=normalized_data["provider_user_id"],
                 provider_email=normalized_data.get("provider_email"),
                 access_token=access_token,

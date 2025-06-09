@@ -6,14 +6,14 @@ from routers.auth.standard import router as email_password_router
 from routers.auth.microsoft import router as microsoft_router
 from routers.auth.google import router as google_router
 from routers.auth.facebook import router as facebook_router
-from routers.auth.apple import router as apple_router
+from routers.auth.strava import router as strava_router
 
 from internal.config.config import (
     AUTH_EMAIL_PASSWORD,
     AUTH_MICROSOFT,
     AUTH_GOOGLE,
     AUTH_FACEBOOK,
-    AUTH_APPLE,
+    AUTH_STRAVA,
 )
 
 router = APIRouter(
@@ -31,5 +31,5 @@ if AUTH_GOOGLE == "true":
     router.include_router(google_router)
 if AUTH_FACEBOOK == "true":
     router.include_router(facebook_router)
-if AUTH_APPLE == "true":
-    router.include_router(apple_router)
+if AUTH_STRAVA == "true":
+    router.include_router(strava_router)
