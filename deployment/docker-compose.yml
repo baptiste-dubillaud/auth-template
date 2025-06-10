@@ -20,7 +20,7 @@ services:
       - FRONTEND_URL=http://${FRONTEND_URL}:${FRONTEND_PORT}
 
       # API url
-      - BACKEND_URL=http://${BACKEND_API_HOST}:${BACKEND_API_PORT}${BACKEND_API_DEFAULT_ROUTE}
+      - BACKEND_URL=http://backend:${BACKEND_API_PORT}${BACKEND_API_DEFAULT_ROUTE}
 
   backend:
     build:
@@ -77,7 +77,7 @@ services:
       - DATABASE_NAME=${DATABASE_NAME}
       - DATABASE_USER=${DATABASE_USER}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_HOST=postgres
       - DATABASE_PORT=${DATABASE_PORT}
     depends_on:
       - postgres
