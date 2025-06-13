@@ -1,101 +1,52 @@
-import styles from "@/app/page.module.css";
-import Image from "next/image";
+'use client';
+
+import { useEffect } from 'react';
+import Link from 'next/link';
+import styles from "./page.module.css";
 
 export default function Home() {
+	useEffect(() => {
+		// Check if user is already logged in
+		const token = localStorage.getItem('token');
+		if (token) {
+			window.location.href = '/dashboard';
+		}
+	}, []);
+
 	return (
 		<div className={styles.container}>
 			<main className={styles.main}>
-				<Image
-					src="/next.svg"
-					alt="Next.js logo"
-					width={180}
-					height={38}
-					priority
-				/>
-				<ol>
-					<li className={styles.listItem}>
-						Get started by editing{" "}
-						<code className={styles.code}>
-							src/app/page.tsx
-						</code>
-						.
-					</li>
-					<li className={styles.listItem}>
-						Save and see your changes instantly.
-					</li>
-				</ol>
-				<div className={styles.buttonGroup}>
-					<a
-						className={styles.deployButton}
-						href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						<Image
-							src="/vercel.svg"
-							alt="Vercel logomark"
-							width={20}
-							height={20}
-						/>
-						Deploy now
-					</a>
-					<a
-						className={styles.docsButton}
-						href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						Read our docs
-					</a>
+				<div className={styles.hero}>
+					<h1 className={styles.title}>Welcome to Auth Template</h1>
+					<p className={styles.description}>
+						A complete authentication system with FastAPI and Next.js
+					</p>
+					<div className={styles.authButtons}>
+						<Link href="/login" className={styles.loginButton}>
+							Sign In
+						</Link>
+						<Link href="/signup" className={styles.signupButton}>
+							Sign Up
+						</Link>
+					</div>
+				</div>
+				
+				<div className={styles.features}>
+					<h2>Backend</h2>
+					<ul className={styles.featureList}>
+						<li>🔒 Email/Password, Google, Microsoft, Facebook, Strava Authentication</li>
+						<li>🗄️ PostgreSQL Database</li>
+						<li>🚀 FastAPI Backend</li>
+						<li>🔐 JWT Token Authentication</li>
+					</ul>
+					<h2>Frontend</h2>
+					<ul className={styles.featureList}>
+						<li>⚡ Next.js Frontend</li>
+						<li>🎨 Tailwind CSS</li>
+						<li>🌐 Default translation implementation</li>
+					</ul>
 				</div>
 			</main>
-			<footer className={styles.footer}>
-				<a
-					className={styles.footerLink}
-					href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<Image
-						aria-hidden
-						src="/file.svg"
-						alt="File icon"
-						width={16}
-						height={16}
-					/>
-					Learn
-				</a>
-				<a
-					className={styles.footerLink}
-					href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<Image
-						aria-hidden
-						src="/window.svg"
-						alt="Window icon"
-						width={16}
-						height={16}
-					/>
-					Examples
-				</a>
-				<a
-					className={styles.footerLink}
-					href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<Image
-						aria-hidden
-						src="/globe.svg"
-						alt="Globe icon"
-						width={16}
-						height={16}
-					/>
-					Go to nextjs.org →
-				</a>
-			</footer>
 		</div>
 	);
 }
