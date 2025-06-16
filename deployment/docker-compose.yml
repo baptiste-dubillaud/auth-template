@@ -1,4 +1,5 @@
 version: '3.8'
+name: ProjectTemplate
 
 services:
   frontend:
@@ -21,6 +22,8 @@ services:
 
       # API url
       - BACKEND_URL=http://backend:${BACKEND_API_PORT}${BACKEND_API_DEFAULT_ROUTE}
+    depends_on:
+      - backend
 
   backend:
     build:
@@ -77,12 +80,12 @@ services:
       - DATABASE_NAME=${DATABASE_NAME}
       - DATABASE_USER=${DATABASE_USER}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-      - DATABASE_HOST=postgres
+      - DATABASE_HOST=database
       - DATABASE_PORT=${DATABASE_PORT}
     depends_on:
-      - postgres
+      - database
 
-  postgres:
+  database:
     image: postgres:16
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
