@@ -17,9 +17,6 @@ services:
       # Env kind
       - FRONT_ENV=${FRONT_ENV}
 
-      # Frontend info
-      - FRONTEND_URL=http://${FRONTEND_URL}:${FRONTEND_PORT}
-
       # API url
       - BACKEND_URL=http://backend:${BACKEND_API_PORT}${BACKEND_API_DEFAULT_ROUTE}
     depends_on:

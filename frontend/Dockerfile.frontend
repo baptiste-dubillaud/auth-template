@@ -16,10 +16,15 @@ COPY . .
 # Build the application
 #RUN npm run build
 
+# Set environment variables for the frontend port
+# This allows the port to be set at build time and used in the CMD instruction
 ARG FRONTEND_PORT
+ENV FRONTEND_PORT=$FRONTEND_PORT
+
+RUN echo "Using frontend port: $FRONTEND_PORT"
 
 # Expose the port the app runs on
 EXPOSE $FRONTEND_PORT
 
 # Start the application
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "npm run dev -- --port $FRONTEND_PORT]
