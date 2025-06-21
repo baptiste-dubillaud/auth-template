@@ -27,4 +27,4 @@ RUN echo "Using frontend port: $FRONTEND_PORT"
 EXPOSE $FRONTEND_PORT
 
 # Start the application
-CMD ["sh", "-c", "npm run dev -- --port $FRONTEND_PORT]
+CMD ["sh", "-c", "npm run dev -- --port $FRONTEND_PORT"]

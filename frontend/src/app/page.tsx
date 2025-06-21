@@ -1,18 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import styles from "./page.module.css";
 
-export default function Home() {
-	useEffect(() => {
-		// Check if user is already logged in
-		const token = localStorage.getItem('token');
-		if (token) {
-			window.location.href = '/dashboard';
-		}
-	}, []);
-
+function HomeContent() {
 	return (
 		<div className={styles.container}>
 			<main className={styles.main}>
@@ -48,5 +40,11 @@ export default function Home() {
 				</div>
 			</main>
 		</div>
+	);
+}
+
+export default function Home() {
+	return (
+		<HomeContent />
 	);
 }

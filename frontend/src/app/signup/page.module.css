@@ -1,22 +1,22 @@
-
-
 .container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
     padding: 20px;
 }
 
-.loginCard {
+.signupCard {
     background: white;
     border-radius: 16px;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     padding: 40px;
     width: 100%;
-    max-width: 400px;
+    max-width: 450px;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .title {
@@ -48,7 +48,7 @@
 .form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
     margin-bottom: 24px;
 }
 
@@ -74,12 +74,18 @@
 
 .inputGroup input:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #764ba2;
+    box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+}
+
+.passwordHint {
+    color: #6b7280;
+    font-size: 12px;
+    margin-top: 4px;
 }
 
 .submitButton {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
     color: white;
     border: none;
     padding: 14px;
@@ -169,18 +175,33 @@
     color: #fc4c02;
 }
 
-.registerLink {
+.loginLink {
     text-align: center;
     color: #6b7280;
     font-size: 14px;
 }
 
-.registerLink a {
-    color: #667eea;
+.loginLink a {
+    color: #764ba2;
     text-decoration: none;
     font-weight: 600;
 }
 
-.registerLink a:hover {
+.loginLink a:hover {
     text-decoration: underline;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .signupCard {
+        padding: 30px 20px;
+    }
+    
+    .oauthButtons {
+        grid-template-columns: 1fr;
+    }
 }
