@@ -2,14 +2,31 @@ version: '3.8'
 name: Project_Template
 
 services:
+  # Nginx reverse proxy with SSL termination
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - auth-network
+
   frontend:
     build:
       context: ../frontend
       dockerfile: Dockerfile.frontend
       args:
         FRONTEND_PORT: ${FRONTEND_PORT}
-    ports:
-      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    expose:
+      - "${FRONTEND_PORT}"
+    extra_hosts:
+      - "template-app.dev:host-gateway"
     volumes:
       - ../frontend:/app
       - /app/node_modules
@@ -21,6 +38,8 @@ services:
       - BACKEND_URL=http://backend:${BACKEND_API_PORT}${BACKEND_API_DEFAULT_ROUTE}
     depends_on:
       - backend
+    networks:
+      - auth-network
 
   backend:
     build:
@@ -29,8 +48,10 @@ services:
       args:
         BACKEND_API_PORT: ${BACKEND_API_PORT}
         BACKEND_API_HOST: ${BACKEND_API_HOST}
-    ports:
-      - "${BACKEND_API_PORT}:${BACKEND_API_PORT}"
+    expose:
+      - "${BACKEND_API_PORT}"
+    extra_hosts:
+      - "template-app.dev:host-gateway"
     volumes:
       - ../backend/src:/app
     environment:
@@ -81,6 +102,8 @@ services:
       - DATABASE_PORT=${DATABASE_PORT}
     depends_on:
       - database
+    networks:
+      - auth-network
 
   database:
     image: postgres:16
@@ -93,6 +116,12 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - auth-network
+
+networks:
+  auth-network:
+    driver: bridge
 
 volumes:
   postgres_data:
