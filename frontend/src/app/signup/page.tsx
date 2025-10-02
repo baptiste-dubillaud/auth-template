@@ -3,9 +3,11 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAuthToken } from '@/hooks/useAuthToken';
+import { resolveBackendUrl } from '@/lib/apiClient';
 import styles from "./page.module.css";
 
 export default function SignupPage() {
+
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -44,8 +46,7 @@ export default function SignupPage() {
         }
 
         try {
-            // Call Next.js API route instead of backend directly
-            const response = await fetch('/api/auth/standard/register', {
+            const response = await fetch(resolveBackendUrl('/auth/standard/register'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -73,8 +74,30 @@ export default function SignupPage() {
         }
     };
 
-    const handleOAuthSignup = (provider: string) => {
-        window.location.href = `/api/auth/${provider}/login`;
+    const handleOAuthSignup = async (provider: string) => {
+        setError('');
+
+        try {
+            const response = await fetch(resolveBackendUrl(`/auth/${provider}/login`), {
+                method: 'GET',
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to initiate OAuth signup');
+            }
+
+            const data = await response.json();
+
+            if (data?.auth_url) {
+                window.location.href = data.auth_url;
+            } else {
+                throw new Error('Missing auth URL');
+            }
+        } catch (oauthError) {
+            console.error(oauthError);
+            setError('Unable to start OAuth signup. Please try again.');
+        }
     };
 
     return (

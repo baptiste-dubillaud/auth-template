@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 
 import { useAuthToken } from '@/hooks/useAuthToken';
+import { resolveBackendUrl } from '@/lib/apiClient';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -19,7 +20,7 @@ export default function LoginPage() {
         setError('');
 
         try {
-            const response = await fetch('/api/auth/standard/login', {
+            const response = await fetch(resolveBackendUrl('/auth/standard/login'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -42,8 +43,30 @@ export default function LoginPage() {
         }
     };
 
-    const handleOAuthLogin = (provider: string) => {
-        window.location.href = `/api/auth/${provider}`;
+    const handleOAuthLogin = async (provider: string) => {
+        setError('');
+
+        try {
+            const response = await fetch(resolveBackendUrl(`/auth/${provider}/login`), {
+                method: 'GET',
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to initiate OAuth login');
+            }
+
+            const data = await response.json();
+
+            if (data?.auth_url) {
+                window.location.href = data.auth_url;
+            } else {
+                throw new Error('Missing auth URL');
+            }
+        } catch (oauthError) {
+            console.error(oauthError);
+            setError('Unable to start OAuth login. Please try again.');
+        }
     };
 
     return (

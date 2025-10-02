@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuthToken } from '@/hooks/useAuthToken';
+import { resolveBackendUrl } from '@/lib/apiClient';
 
 interface User {
     id: string;
@@ -60,7 +61,7 @@ export default function AuthLayout({
 
                 console.log('Fetching user data from /me endpoint');
                 // Fetch user data
-                const response = await fetch('/api/auth/standard/me', {
+                const response = await fetch(resolveBackendUrl('/auth/standard/me'), {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }

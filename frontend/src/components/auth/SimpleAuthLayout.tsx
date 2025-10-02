@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuthToken } from '@/hooks/useAuthToken';
+import { resolveBackendUrl } from '@/lib/apiClient';
 
 interface User {
     id: string;
@@ -71,7 +72,7 @@ export default function SimpleAuthLayout({
                 fetchedTokenRef.current = token;
 
                 try {
-                    const response = await fetch('/api/auth/standard/me', {
+                    const response = await fetch(resolveBackendUrl('/auth/standard/me'), {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
